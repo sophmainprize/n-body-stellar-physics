@@ -1,0 +1,241 @@
+# N-Body Stellar Dynamics — Development Log
+
+**Project:** N-Body Stellar Dynamics Simulation  
+**Programming language:** Python  
+**Primary libraries:** NumPy, Matplotlib, SciPy  
+**Development environment:** Jupyter Notebook, VS Code  
+**Repository:** `n-body-stellar-dynamics`
+
+## Week 1 — Foundations of Two-Body Gravitational Dynamics
+
+### 1. Objectives
+
+The first week focused on establishing the foundations of a numerical gravitational simulation.
+
+The objectives were to:
+
+- Define initial conditions for a binary star system.
+- Implement Newtonian gravitational acceleration.
+- Calculate the forces acting on each star.
+- Numerically integrate the equations of motion.
+- Visualise orbital trajectories.
+- Introduce energy conservation as a numerical validation tool.
+- Verify the behaviour of the system's centre of mass.
+
+### 2. Initial Conditions
+
+I created an idealised binary star system containing two equal-mass stars.
+
+The gravitational constant was set to \(G=1\), using dimensionless units.
+
+#### Initial parameters:
+
+Mass: 
+Star 1: 1.0, Star 2: 1.0
+
+Initial x-position
+Star 1: -0.5 
+Star 2: 0.5 
+
+Initial y-position
+Star 1: 0.0
+Star 2: 0.0
+
+Initial x-velocity
+Star 1: 0.0 
+Star 2: 0.0 
+
+Initial y-velocity
+Star 1: -0.7071 
+Star 2: 0.7071
+
+The initial separation was 1.0.
+
+The velocities were chosen to approximate the circular orbital speed of the equal-mass binary system:
+
+\[
+v=\sqrt{\frac{Gm}{2r}}
+\]
+
+For the selected parameters:
+
+\[
+v=\sqrt{\frac{1}{2}}\approx0.7071
+\]
+
+This provided suitable initial conditions for investigating binary orbital motion.
+
+### 3. Gravitational Acceleration
+
+I implemented a Python function to calculate the gravitational acceleration experienced by one star due to another.
+
+The mathematical expression used was:
+
+\[
+\mathbf a =
+Gm\frac{\mathbf r}{|\mathbf r|^3}
+\]
+
+NumPy was used to calculate the displacement vector and its magnitude.
+
+I then calculated the acceleration acting on each star and used Newton's third law to verify that the forces were equal and opposite:
+
+\[
+\mathbf F_1=-\mathbf F_2
+\]
+
+The total force on the system was zero, as expected.
+
+### 4. Numerical Integration
+
+I implemented the explicit Euler method to evolve the positions and velocities of both stars.
+
+#### The simulation parameters were:
+
+Timestep: 0.001
+Total simulation time: 10.0
+Number of timesteps: 10,000 
+Integration method: Euler
+
+At each timestep:
+
+1. Calculate the displacement between the stars.
+2. Calculate gravitational acceleration.
+3. Store the old velocities.
+4. Update the velocities.
+5. Update the positions using the old velocities.
+6. Calculate and record the total mechanical energy.
+7. Record the updated positions.
+
+The resulting trajectories were visualised using Matplotlib.
+
+### 5. Energy Conservation
+
+I calculated the kinetic and gravitational potential energy of the system.
+
+Kinetic energy:
+
+\[
+K=\frac12m_1v_1^2+\frac12m_2v_2^2
+\]
+
+Potential energy:
+
+\[
+U=-\frac{Gm_1m_2}{r}
+\]
+
+Total mechanical energy:
+
+\[
+E=K+U
+\]
+
+The initial energy was recorded before the simulation loop, and subsequent energy values were recorded at every timestep.
+
+#### Results
+
+Initial energy: -0.50000959
+Final energy: -0.48146575 
+Absolute energy change: +0.01854384 
+Relative energy change: Approximately 3.71%
+
+The simulation showed a gradual increase in total mechanical energy.
+
+This demonstrated that the explicit Euler method introduces numerical energy drift over time.
+
+Although the method successfully generated orbital motion, it does not conserve the system's total energy exactly.
+
+This result will provide a useful baseline for comparing numerical integration methods in Week 3.
+
+## 6. Centre-of-Mass Verification
+
+I calculated the centre of mass at every recorded timestep:
+
+\[
+\mathbf r_{\mathrm{COM}}=
+\frac{m_1\mathbf r_1+m_2\mathbf r_2}
+{m_1+m_2}
+\]
+
+Because both stars have equal masses and begin at opposite positions, the centre of mass should remain at the origin.
+
+The calculated maximum displacement was:
+
+\[
+\boxed{0.0}
+\]
+
+This confirmed that the centre of mass remained stationary throughout the simulation.
+
+It also demonstrated that the system retained its symmetry despite the numerical energy drift.
+
+## 7. Problems Encountered and Solutions
+
+### Problem 1 — Incorrect orbital trajectories
+
+The initial simulation produced trajectories that did not resemble the expected circular orbit.
+
+**Solution:** I investigated the initial orbital velocities and corrected them to approximately \(0.7071\), consistent with the theoretical circular orbital speed for the chosen system.
+
+### Problem 2 — Recording simulation positions
+
+An error occurred when attempting to append positions to a NumPy array.
+
+**Cause:** The position-recording variables had previously been converted from Python lists into NumPy arrays.
+
+**Solution:** I reset the recording variables as empty Python lists before running the simulation.
+
+### Problem 3 — Energy history recording
+
+Initially, energy calculations were not being recorded correctly throughout the simulation.
+
+**Solution:** I moved the energy calculation and recording operations inside the simulation loop and included the initial energy before the first timestep.
+
+### Problem 4 — Energy drift
+
+The simulation showed a noticeable increase in total mechanical energy.
+
+**Investigation:** The initial conditions and velocities were checked and found to be consistent with the intended binary system.
+
+**Conclusion:** The observed drift is consistent with the limitations of explicit Euler integration. This will be investigated further through comparisons with alternative numerical methods.
+
+## 8. Skills and Knowledge Developed
+
+During Week 1, I developed practical experience with:
+
+- Python functions and loops.
+- NumPy arrays and vector calculations.
+- Newtonian gravitational mechanics.
+- Explicit Euler numerical integration.
+- Scientific plotting with Matplotlib.
+- Recording and analysing simulation data.
+- Kinetic and potential energy calculations.
+- Centre-of-mass calculations.
+- Numerical validation and debugging.
+
+## 9. Week 1 Conclusions
+
+A working two-body gravitational simulation was successfully implemented.
+
+The simulation demonstrated how Newtonian gravitational interactions can be modelled numerically and how particle positions and velocities evolve over time.
+
+The energy and centre-of-mass calculations introduced physical validation into the project.
+
+The main limitation identified was numerical energy drift associated with explicit Euler integration.
+
+This provides a clear motivation for investigating more accurate and stable numerical integration methods later in the project.
+
+## 10. Plan for Week 2
+
+The next stage is to generalise the gravitational calculations from two particles to an arbitrary number of particles.
+
+Planned tasks:
+
+- Develop a general N-body gravitational acceleration calculator.
+- Calculate the gravitational influence of every other particle.
+- Implement a system containing multiple stars.
+- Investigate gravitational softening to prevent singular accelerations during close encounters.
+- Test the force calculations using simple configurations with known expected behaviour.
+
+**Week 1 status: Complete.**
